@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 
-# canUnlockAll: Checks if a set of boxes (represented as a list of lists) can be opened
-
 def canUnlockAll(boxes):
+    '''canUnlockAll: Checks if a set of boxes (represented as a list of lists) can be opened'''
     got_keys = [0]
     total_boxes = list(range(0, len(boxes)))
     for i in got_keys:
