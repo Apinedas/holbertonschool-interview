@@ -33,24 +33,28 @@ void swap_if_higher(heap_t *node, heap_t **root)
 
     parent = node->parent;
 
+    if (node->left)
+        node->left->parent = parent;
+    if (node->right)
+        node->right->parent = parent;
     if (parent->left == node)
     {
         copy = node->right;
         node->right = parent->right;
-        parent->left = node->left;
-        node->left = parent;
         if (parent->right)
             parent->right->parent = node;
+        parent->left = node->left;
+        node->left = parent;
         parent->right = copy;
     }
     else
     {
         copy = node->left;
         node->left = parent->left;
-        parent->right = node->right;
-        node->right = parent;
         if (parent->left)
             parent->left->parent = node;
+        parent->right = node->right;
+        node->right = parent;
         parent->left = copy;
     }
     if (parent->parent)
@@ -65,7 +69,7 @@ void swap_if_higher(heap_t *node, heap_t **root)
     
     if ((*root)->parent && !(node->parent))
         *root = node;
-    swap_if_higher(node->parent, root);
+    swap_if_higher(node, root);
 }
 
 /**
