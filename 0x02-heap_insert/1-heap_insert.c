@@ -24,39 +24,48 @@ void heap_tree_postorder(heap_t *tree, heap_t *node ,void (*func)(heap_t *, heap
  * @node: pointer to node to evaluate
  */
 
-void swap_if_higher(heap_t *node)
+void swap_if_higher(heap_t *node, heap_t **root)
 {
     heap_t *copy = NULL, *parent = NULL;
 
     if (!node || !node->parent || node->n <= node->parent->n)
         return;
 
-    copy = malloc(sizeof(*copy));
     parent = node->parent;
-    if (!copy)
-        return;
-    copy->parent = node->parent;
-    copy->left = node->left;
-    copy->right = node->right;
-    copy->n = node->n;
-    if (node->left == parent->left)
+
+    if (parent->left == node)
     {
-        node->left = parent;
+        copy = node->right;
         node->right = parent->right;
+        parent->left = node->left;
+        node->left = parent;
+        if (parent->right)
+            parent->right->parent = node;
+        parent->right = copy;
     }
-    else if (node->right == parent->right)
+    else
     {
-        node->right = parent;
+        copy = node->left;
         node->left = parent->left;
+        parent->right = node->right;
+        node->right = parent;
+        if (parent->left)
+            parent->left->parent = node;
+        parent->left = copy;
+    }
+    if (parent->parent)
+    {
+        if (parent->parent->left == parent)
+            parent->parent->left = node;
+        else
+            parent->parent->right = node;
     }
     node->parent = parent->parent;
-    node->n = parent->n;
-    parent->parent = copy->parent;
-    parent->n = copy->n;
-    parent->left = copy->left;
-    parent->right = copy->right;
-    free(copy);
-    swap_if_higher(node->parent);
+    parent->parent = node;
+    
+    if ((*root)->parent && !(node->parent))
+        *root = node;
+    swap_if_higher(node->parent, root);
 }
 
 /**
@@ -101,6 +110,6 @@ heap_t *heap_insert(heap_t **root, int value)
     }
 
     heap_tree_postorder(*root, new_node, heap_insert_aux);
-    swap_if_higher(new_node);
+    swap_if_higher(new_node, root);
     return (new_node);
 }
