@@ -1,6 +1,46 @@
 #include "binary_trees.h"
 
 /**
+ * binary_tree_height - measures the height of a binary tree
+ * @tree: pointer to the root node of the tree to measure the height.
+ * Return: Height of tree, or 0 if tree is NULL
+ */
+
+size_t binary_tree_height(const binary_tree_t *tree)
+{
+	size_t left_height = 0, right_height = 0;
+
+	if (!tree)
+		return (0);
+	if (tree->left)
+		left_height = 1 + binary_tree_height(tree->left);
+	if (tree->right)
+		right_height = 1 + binary_tree_height(tree->right);
+	return (right_height > left_height ? right_height : left_height);
+}
+
+/**
+ * hp_is_perfect - aux function for perfect binary tree
+ * @tree: Pointer to node
+ * @lvl: Node lvl
+ * @height: Height from tree node
+ * Return: 1 if tree is perfect, 0 otherwise
+*/
+
+int hp_is_perfect(const binary_tree_t *tree, int height, int lvl)
+{
+	if (!tree)
+		return (0);
+	if (!(tree->left) && !(tree->right))
+		return (height == lvl ? 1 : 0);
+	if (!(tree->left) || !(tree->right))
+		return (0);
+	return (hp_is_perfect(tree->left, height, lvl + 1) *
+		   hp_is_perfect(tree->right, height, lvl + 1));
+}
+
+
+/**
  * hp_tree_post - goes through a binary tree by post-order traversal
  * @tree: pointer to the root node of the tree to traverse
  * @node: node to exec function
@@ -9,11 +49,15 @@
 
 void hp_tree_post(heap_t *tree, heap_t *node, void (*func)(heap_t *, heap_t *))
 {
+	size_t left_height = binary_tree_height(tree->left);
+	size_t right_height = binary_tree_height(tree->right);
+	int left_perfect = hp_is_perfect(tree->left, left_height, 0);
+	int right_perfect = hp_is_perfect(tree->right, right_height, 0);
+
 	if (!tree->left || !tree->right)
 		func(tree, node);
-	else if (tree->left && (!tree->left->left || !tree->left->right))
-		hp_tree_post(tree->left, node, func);
-	else if (tree->right && (!tree->right->left || !tree->right->right))
+	else if ((left_perfect && !right_perfect) ||
+			 (left_perfect && right_perfect && (right_height < left_height)))
 		hp_tree_post(tree->right, node, func);
 	else
 		hp_tree_post(tree->left, node, func);
