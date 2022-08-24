@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Module to calc min number of operations using prime numbers"""
 
 import math
 
