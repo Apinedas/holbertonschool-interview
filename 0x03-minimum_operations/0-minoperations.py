@@ -3,7 +3,7 @@
 
 def minOperations(n):
     i = 2
-    if n != 1:
+    if n >= 1:
         while n % i != 0:
             i += 1
         return i + minOperations(int(n/i))
