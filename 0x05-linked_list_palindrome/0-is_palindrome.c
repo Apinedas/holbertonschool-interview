@@ -8,21 +8,21 @@
 
 int is_palindrome(listint_t **head)
 {
-	listint_t *curr;
+	listint_t *curr, *compare;
 
 	if (!head || !*head)
 		return (1);
 
 	curr = *head;
-	while (curr->next)
-		curr = curr->next;
-
-	if ((*head)->n != curr->n)
-		return (0);
-
-	curr = *head;
+	compare = curr->next;
 	while (curr->next && curr->next->next)
+	{
 		curr = curr->next;
+		compare = curr->next;
+	}
+
+	if ((*head)->n != compare->n)
+		return (0);
 
 	curr->next = NULL;
 	return (is_palindrome(&(*head)->next));
