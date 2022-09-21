@@ -42,12 +42,12 @@ for line in sys.stdin:
         if counter == 10:
             print('File size: {}'.format(totalSize))
             counter = 0
-            for code, count in statusCodes.items():
-                if count != 0:
-                    print('{}: {}'.format(code, count))
+            for code in sorted(statusCodes.keys()):
+                if statusCodes[code] != 0:
+                    print('{}: {}'.format(code, statusCodes[code]))
 
 
 print('File size: {}'.format(totalSize))
-for code, count in statusCodes.items():
-    if count != 0:
-        print('{}: {}'.format(code, count))
+for code in sorted(statusCodes.keys()):
+    if statusCodes[code] != 0:
+        print('{}: {}'.format(code, statusCodes[code]))
