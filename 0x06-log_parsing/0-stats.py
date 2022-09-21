@@ -6,14 +6,14 @@ import re
 import signal
 import sys
 
-ip = r'(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+ip = r'(.+)'
 date = r'(\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.*\d*])'
 getCode = r'("GET \/projects\/260 HTTP\/1.1")'
 stat = r'(200|301|400|401|403|404|405|500)'
 fileSize = r'(\d+)'
 
 regexFormat = re.compile(
-    '{} - {} {} {} {}'.format(ip, date, getCode, stat, fileSize))
+    '{} *- *{} {} {} {}'.format(ip, date, getCode, stat, fileSize))
 
 statusCodes = {'200': 0,
                '301': 0,
@@ -35,9 +35,10 @@ signal.signal(signal.SIGINT, signalHandler)
 
 for line in sys.stdin:
     if regexFormat.match(line) is not None:
+        print(line)
         counter += 1
         splittedLine = line.split(' ')
-        statusCodes[splittedLine[7]] += 1
+        statusCodes[splittedLine[-2]] += 1
         totalSize += int(splittedLine[-1])
         if counter == 10:
             print('File size: {}'.format(totalSize))
