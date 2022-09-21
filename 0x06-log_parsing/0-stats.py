@@ -35,7 +35,6 @@ signal.signal(signal.SIGINT, signalHandler)
 
 for line in sys.stdin:
     if regexFormat.match(line) is not None:
-        print(line)
         counter += 1
         splittedLine = line.split(' ')
         statusCodes[splittedLine[-2]] += 1
