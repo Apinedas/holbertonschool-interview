@@ -9,7 +9,7 @@ import sys
 ip = r'(.+)'
 date = r'(\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.*\d*])'
 getCode = r'("GET \/projects\/260 HTTP\/1.1")'
-stat = r'(200|301|400|401|403|404|405|500)'
+stat = r'(200|301|400|401|403|404|405|500|.*)'
 fileSize = r'(\d+)'
 
 regexFormat = re.compile(
@@ -37,7 +37,8 @@ for line in sys.stdin:
     if regexFormat.match(line) is not None:
         counter += 1
         splittedLine = line.split(' ')
-        statusCodes[splittedLine[-2]] += 1
+        if splittedLine[-2] in statusCodes.keys():
+            statusCodes[splittedLine[-2]] += 1
         totalSize += int(splittedLine[-1])
         if counter == 10:
             print('File size: {}'.format(totalSize))
