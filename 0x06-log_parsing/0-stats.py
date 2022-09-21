@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 '''Log parsing module'''
+
+
 import re
 import signal
 import sys
@@ -24,10 +26,10 @@ statusCodes = {'200': 0,
 counter = 0
 totalSize = 0
 
+
 def signalHandler(sig, frame):
-    print('File size: {}'.format(totalSize))
-    for code, count in statusCodes.items():
-        print('{}: {}'.format(code, count))
+    print('', end='')
+
 
 signal.signal(signal.SIGINT, signalHandler)
 
@@ -41,5 +43,11 @@ for line in sys.stdin:
             print('File size: {}'.format(totalSize))
             counter = 0
             for code, count in statusCodes.items():
-                print('{}: {}'.format(code, count))
+                if count != 0:
+                    print('{}: {}'.format(code, count))
 
+
+print('File size: {}'.format(totalSize))
+for code, count in statusCodes.items():
+    if count != 0:
+        print('{}: {}'.format(code, count))
