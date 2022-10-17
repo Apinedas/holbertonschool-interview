@@ -26,7 +26,10 @@ def validUTF8(data):
             return False
 
         for j in range(i + 1, i + total_ones_in_a_row):
-            actual_binary_byte = bin(data[j]).split('b')[1]
+            try:
+                actual_binary_byte = bin(data[j]).split('b')[1]
+            except Exception:
+                return False
             if actual_binary_byte[0:2] != '10':
                 return False
             i += 1
